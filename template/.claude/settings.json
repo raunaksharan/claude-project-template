@@ -15,7 +15,11 @@
     ],
     "deny": [
       "Read(./.env)",
-      "Read(./.env.*)"
+      "Read(./.env.*)",
+      "Write(./.claude/plan-approval.json)",
+      "Edit(./.claude/plan-approval.json)",
+      "Bash(*approve_plan*)",
+      "Bash(*plan-approval*)"
     ]
   },
   "hooks": {
@@ -26,6 +30,17 @@
           {
             "type": "command",
             "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/lint.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/plan_gate.py"
           }
         ]
       }

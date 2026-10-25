@@ -7,9 +7,10 @@ Fails (exit 1) while any {{FILL…}} marker is left or a required part is missin
 - CLAUDE.md has its sections and chooses one test mode (A or B);
 - ARCHITECTURE.md has sections 1–14, and invariants;
 - at least one ADR, and a failure-modes table with F1;
-- a milestone map, and per milestone a SPEC.md (Public API, Behaviour, Acceptance
-  criteria with AC ids) and a PROMPTS.md with XML-tagged prompts;
+- a milestone map, and per milestone a SPEC.md (You build, the public API per module,
+  acceptance criteria with AC ids) and a PROMPTS.md with XML-tagged prompts;
 - .mcp.json parses, and the process skills are vendored or the plugin is enabled;
+- PLAN.md exists (whether it's approved is reported, not required);
 - .claude/commands/verify.md lists real checks.
 """
 
@@ -46,6 +47,8 @@ def main() -> int:
             continue  # the template stays a template
         if rel.parts[:2] == ("milestones", "01-example"):
             continue  # reported below if it's the only milestone
+        if rel.parts[:2] == ("architecture", "adr") and rel.name.startswith("0000"):
+            continue  # the ADR template stays a template
         try:
             lines = f.read_text().splitlines()
         except (UnicodeDecodeError, OSError):
@@ -91,8 +94,10 @@ def main() -> int:
         spec, prompts = d / "SPEC.md", d / "PROMPTS.md"
         s = spec.read_text() if spec.exists() else ""
         need(bool(s), f"{d.name}: missing SPEC.md")
-        need("Public API" in s, f"{d.name}/SPEC.md: no Public API")
-        need("Behaviour" in s, f"{d.name}/SPEC.md: no Behaviour")
+        need("Public API" in s or re.search(r"^## `[^`]+`", s, re.M) is not None,
+             f"{d.name}/SPEC.md: no Public API (a 'Public API' list or a '## `module`' section)")
+        need(re.search(r"\*\*You build:\*\*", s) is not None,
+             f"{d.name}/SPEC.md: no '**You build:**' line")
         need(re.search(r"\bAC-\d+\.\d+", s) is not None,
              f"{d.name}/SPEC.md: no acceptance criteria (AC-NN.k)")
         p = prompts.read_text() if prompts.exists() else ""
@@ -114,7 +119,12 @@ def main() -> int:
     need((root / ".claude/skills/tdd-module/SKILL.md").exists() or "spec-driven-build@" in stext,
          "process skills: neither vendored in .claude/skills nor the plugin enabled")
 
-    # 7. verify command
+    # 7. PLAN.md exists (approval is reported, not required: readiness comes first)
+    plan = root / "PLAN.md"
+    need(plan.exists(), "missing PLAN.md (written at the end of /plan-project)")
+    approved = (root / ".claude/plan-approval.json").exists()
+
+    # 8. verify command
     v = root / ".claude/commands/verify.md"
     need(v.exists() and re.search(r"^\s*1\. \S", v.read_text(), re.M) is not None,
          ".claude/commands/verify.md: no checks listed")
@@ -123,8 +133,12 @@ def main() -> int:
         print(f"NOT READY: {len(problems)} problem(s) in {root}\n")
         print("\n".join(f"- {p}" for p in problems))
         return 1
-    print(f"READY: {root} has every plan-phase file filled in. Hand it to Claude: "
-          f"/start-milestone {real[0].name[:2]}")
+    print(f"READY: {root} has every plan-phase file filled in.")
+    if approved:
+        print("PLAN.md is APPROVED. Claude may build: /build-project")
+    else:
+        print('PLAN.md is not approved yet. The user reviews it, then runs: '
+              '! python3 scripts/approve_plan.py --by "<name>"')
     return 0
 
 

@@ -20,6 +20,7 @@ Plugin components are namespaced, so the commands run as `/spec-driven-build:pla
 
 | Skills | Commands |
 |---|---|
+| `plan-project` (the interview: QUESTIONS, CATALOG, PATTERNS) | `plan-project`, `build-project` |
 | `karpathy-guidelines` (vendored, MIT) | `start-milestone`, `plan-milestone`, `clarify` |
 | `clarify-before-building`, `write-plan`, `tdd-module`, `debug-root-cause`, `verify-before-done`, `review-and-learn` (adapted from obra/superpowers, MIT) | `write-tests`, `build-module`, `review`, `learn`, `catch-up` |
 

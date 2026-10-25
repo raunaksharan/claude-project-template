@@ -16,4 +16,4 @@
 
 ## Patterns
 
-{{FILL: P-numbers from claude-project-template/patterns/agentic-patterns.md}}
+{{FILL: P-numbers from claude-project-template/the plan-project skill's PATTERNS.md}}

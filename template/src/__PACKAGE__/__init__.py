@@ -1,1 +1,1 @@
-"""{{PROJECT}}: {{FILL: one line on what the package does}}."""
+"""{{PROJECT}}: {{FILL: what the package does, under 80 characters}}."""

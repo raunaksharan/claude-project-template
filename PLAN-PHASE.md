@@ -1,5 +1,11 @@
 # The plan phase: what the architect fixes before Claude builds
 
+> **Two ways through this page:** run `/plan-project <objective>` and Claude interviews
+> you through these steps, writing each answer into its file; or fill the files by hand,
+> step by step. Either way it ends the same. `check_ready.py` passes, Claude writes
+> `PLAN.md`, and **nothing is built until you approve it** with
+> `! python3 scripts/approve_plan.py --by "<name>"`, which a hook enforces.
+
 Claude can build almost anything you can specify precisely. What it cannot do is read
 your mind about decisions nobody wrote down. The plan phase writes those decisions down,
 once, in files that every later session reads.
@@ -37,7 +43,7 @@ from interview notes.
 
 An invariant is a rule the system must never break, whatever the model says. Every
 agentic system needs at least these four decisions written down. The patterns that
-answer them are in [patterns/agentic-patterns.md](patterns/agentic-patterns.md):
+answer them are in [PATTERNS.md](plugins/spec-driven-build/skills/plan-project/PATTERNS.md):
 
 - [ ] **Where the model may act, and where it may not.** Which components are AI and
       which are deterministic, and why (pattern P1). For example: an LLM is never in a

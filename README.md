@@ -16,13 +16,25 @@ The method comes from [`agentic-credit-underwriter`](examples/credit-underwriter
 There, headless Claude Code rebuilt six milestones from these files alone, with every
 test green and 32/32 on the eval.
 
-## The three phases
+## How a project goes
 
-| Phase | Who | What happens | Done when |
+| # | Step | Who | What happens |
 |---|---|---|---|
-| **1. Plan** | Architect, with Claude as a sparring partner | Fill in `template/` for the project: architecture, `CLAUDE.md`, the milestone map, each milestone's `SPEC.md`, the acceptance tests or criteria, and any use-case skills | `python3 scripts/check_ready.py <project>` passes, and [PLAN-PHASE.md](PLAN-PHASE.md) is ticked off |
-| **2. Build** | Claude, with gates for a human | Per milestone: `/start-milestone` → `/plan-milestone` (gate: plan approved) → tests first (gate: tests approved, if the spec didn't ship them) → `/build-module` per module → `/verify` → `/review` → `/learn` | `/verify` is green and the PR is approved |
-| **3. Learn** | Both | Accepted review findings become lines in `CLAUDE.md` › Learnings. Answered questions become Clarifications. Repeated procedures become skills or commands. | The next milestone starts with a better `CLAUDE.md` than the last |
+| 1 | **Objective** | User | The user brings the feature list and a short description of what they want to build and show |
+| 2 | **Interview** | Claude, with the user | `/plan-project <objective>`: Claude fills what the objective already answers, then asks questions section by section (meta-prompting) until every template field is filled. It writes each answer into its file as it goes |
+| 3 | **Unknowns** | Claude, with the user | For a field the user can't answer, Claude offers 2–3 concrete options with a recommendation and records the choice ("chosen from options") |
+| 4 | **Tooling** | Claude, with the user | Claude proposes process skills, use-case skills, MCP servers and plugins that fit, and adds any the user names |
+| 5 | **"Okay, I'm good. This is the plan."** | Claude | `check_ready.py` passes; Claude writes `PLAN.md` (status DRAFT), summarises it, lists the open assumptions, and **stops** |
+| 6 | **Approval, then build** | User, then Claude | The user edits anything, then approves by typing `! python3 scripts/approve_plan.py --by "<name>"`. Until then a hook blocks every write to `src/` and `tests/`. After approval, `/build-project` builds milestone by milestone, with human gates at each plan, the tests (Mode B), the review and the merge |
+
+After the build, the learning loop continues:
+
+- accepted review findings become lines in `CLAUDE.md` › Learnings;
+- answered questions become Clarifications;
+- repeated procedures become use-case skills.
+
+An architect who prefers to fill the files by hand can follow
+[PLAN-PHASE.md](PLAN-PHASE.md) instead of step 2. Steps 5 and 6 are the same either way.
 
 ## Start a project
 
@@ -48,13 +60,15 @@ definition of ready for handing the project to Claude.
 
 | Path | What it is | Change per project? |
 |---|---|---|
-| [PLAN-PHASE.md](PLAN-PHASE.md) | The architect's checklist: what to fix, in what order, and why | No, follow it |
-| [patterns/agentic-patterns.md](patterns/agentic-patterns.md) | Architecture patterns to choose from (trust layers, typed results, fault injection, node failure policies, eval layers, and more) | No, pick from it |
+| [PLAN-PHASE.md](PLAN-PHASE.md) | The architect's checklist: what to fix, in what order, and why. `/plan-project` follows the same order | No, follow it |
+| `template/PLAN.md` | The one-page plan the user approves | Written by `/plan-project` |
+| `template/scripts/approve_plan.py`, `template/.claude/hooks/plan_gate.py` | The approval (run by the user with `!`) and the hook that blocks `src/` and `tests/` until it exists and matches `PLAN.md` | No |
+| [PATTERNS.md](plugins/spec-driven-build/skills/plan-project/PATTERNS.md) | Architecture patterns to choose from (trust layers, typed results, fault injection, node failure policies, eval layers, and more) | No, pick from it |
 | `template/ARCHITECTURE.md` | The one-page architecture, in 14 sections | **Yes**, fully |
 | `template/architecture/` | Requirements, failure modes, ADR template | **Yes** |
 | `template/CLAUDE.md` | Context, Scope, Plan, Commands, Rules, How to work, Don't touch, Code map, Skills, Clarifications, Learnings | **Yes**, all except How to work |
 | `template/milestones/` | The milestone map, plus `SPEC.md` and an XML-tagged `PROMPTS.md` per milestone | **Yes** |
-| [`plugins/spec-driven-build/`](plugins/spec-driven-build/README.md) | **A Claude Code plugin** with the process skills (`karpathy-guidelines`, plus six adapted from obra/superpowers) and the milestone commands (`/start-milestone`, `/plan-milestone`, `/clarify`, `/write-tests`, `/build-module`, `/review`, `/learn`, `/catch-up`). `new_project.py --kit vendored` copies them in; `--kit plugin` enables the plugin instead | No |
+| [`plugins/spec-driven-build/`](plugins/spec-driven-build/README.md) | **A Claude Code plugin**: `plan-project` (the interview, with its question bank, tooling catalogue and pattern catalogue), the process skills (`karpathy-guidelines`, plus six adapted from obra/superpowers) and the commands (`/plan-project`, `/build-project`, `/start-milestone`, `/plan-milestone`, `/clarify`, `/write-tests`, `/build-module`, `/review`, `/learn`, `/catch-up`). `new_project.py --kit vendored` copies them in; `--kit plugin` enables the plugin instead | No |
 | [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) | Makes this repo a plugin marketplace, `fde-project-kit` | No |
 | `template/.claude/` | `settings.json`, the lint hook, `commands/verify.md` (the project's check list), `skills/_use-case-skill-template` | `verify.md`, plus your use-case skills |
 | `template/.mcp.json`, `.mcp.example.json` | The MCP servers Claude Code may use while building (empty by default) | **Yes**, decided in the plan phase (step 8b) |

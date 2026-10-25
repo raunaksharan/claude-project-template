@@ -6,7 +6,7 @@ them together and links to them rather than repeating them.
 
 <!-- How to fill this in: PLAN-PHASE.md steps 2–4 in claude-project-template.
      Worked example: agentic-credit-underwriter/ARCHITECTURE.md.
-     Patterns to pick from: patterns/agentic-patterns.md (P1–P19). -->
+     Patterns to pick from: the plan-project skill's PATTERNS.md (P1–P19). -->
 
 ## 1. Problem and outcome
 
