@@ -45,6 +45,8 @@ def main() -> int:
             continue
         if rel.parts[:2] == (".claude", "skills") and "_use-case-skill-template" in rel.parts:
             continue  # the template stays a template
+        if rel.as_posix() in {"scripts/approve_plan.py", ".claude/hooks/plan_gate.py"}:
+            continue  # tooling, not plan content
         if rel.parts[:2] == ("milestones", "01-example"):
             continue  # reported below if it's the only milestone
         if rel.parts[:2] == ("architecture", "adr") and rel.name.startswith("0000"):

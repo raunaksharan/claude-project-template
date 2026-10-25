@@ -73,7 +73,7 @@ definition of ready for handing the project to Claude.
 | `template/.claude/` | `settings.json`, the lint hook, `commands/verify.md` (the project's check list), `skills/_use-case-skill-template` | `verify.md`, plus your use-case skills |
 | `template/.mcp.json`, `.mcp.example.json` | The MCP servers Claude Code may use while building (empty by default) | **Yes**, decided in the plan phase (step 8b) |
 | `template/workflows/` | The same procedures written for people | Rarely |
-| `template/kit/` | Optional. Generates each milestone's Public API section from code, makes starter branches, and proves the step order | Config only (`kit/milestones.json`) |
+| `template/kit/` | Optional, copied only with `new_project.py --with-kit`. Generates each milestone's Public API section from code, makes starter branches, and proves the step order | Config only (`kit/milestones.json`) |
 | [examples/credit-underwriter.md](examples/credit-underwriter.md) | Every template file mapped to its filled version in the worked example | No |
 
 ## Why this works

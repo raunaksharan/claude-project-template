@@ -16,7 +16,7 @@ or pasted text). Output: every plan-phase file filled in, `PLAN.md` written with
 
 ## 0. Set up
 
-- If the project has no `CLAUDE.md` with `{{FILL` markers, it wasn't created from the
+- If the project has no `CLAUDE.md` with FILL markers, it wasn't created from the
   template. Ask for the project name, package and CLI name, then run
   `python3 <template>/scripts/new_project.py` (ask where the template is if you don't
   know).

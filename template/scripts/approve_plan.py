@@ -3,7 +3,7 @@
 In Claude Code, type it with the ! prefix so it runs as you:
     ! python3 scripts/approve_plan.py --by "Your Name"
 
-It checks that PLAN.md has no {{FILL markers left, sets its status line to APPROVED, and writes
+It checks that PLAN.md has no FILL markers left, sets its status line to APPROVED, and writes
 .claude/plan-approval.json with your name, the time and a hash of PLAN.md. The plan-gate hook
 lets Claude write to the build paths only while that hash matches. Edit PLAN.md later and it
 must be approved again. `--revoke` removes the approval.
@@ -43,8 +43,8 @@ def main() -> int:
     if not a.by:
         ap.error("--by is required")
     text = PLAN.read_text()
-    if "{{" in text:
-        print("PLAN.md still has {{FILL}} markers; finish the plan first", file=sys.stderr)
+    if "{" * 2 in text:
+        print("PLAN.md still has FILL markers; finish the plan first", file=sys.stderr)
         return 1
     when = dt.datetime.now().astimezone().isoformat(timespec="minutes")
     text = STATUS.sub(f"**Status:** APPROVED by {a.by} on {when}", text, count=1)

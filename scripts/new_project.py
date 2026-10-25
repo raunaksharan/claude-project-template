@@ -35,6 +35,8 @@ def main() -> None:
     ap.add_argument("--dest", required=True)
     ap.add_argument("--kit", choices=["vendored", "plugin"], default="vendored",
                     help="copy the process skills and commands in, or enable the plugin")
+    ap.add_argument("--with-kit", action="store_true",
+                    help="also copy kit/ (starter branches from reference code; for teaching)")
     ap.add_argument("--no-git", action="store_true", help="don't run git init")
     a = ap.parse_args()
 
@@ -43,6 +45,8 @@ def main() -> None:
         raise SystemExit(f"{dest} exists and is not empty")
     shutil.copytree(TEMPLATE, dest, dirs_exist_ok=True,
                     ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+    if not a.with_kit:
+        shutil.rmtree(dest / "kit", ignore_errors=True)
     for p in sorted(dest.rglob("*__PACKAGE__*"), key=lambda p: -len(p.parts)):
         p.rename(p.with_name(p.name.replace("__PACKAGE__", a.package)))
     values = {"{{PROJECT}}": a.name, "{{PACKAGE}}": a.package, "{{CLI}}": a.cli}
