@@ -134,6 +134,8 @@ turned into a guess.
       stated (and its tests enforce), say so and name the rule. Our pilot's one
       cross-milestone break came from a silent change of this kind.
 - [ ] **The acceptance command:** what must be green to call the milestone done.
+- [ ] **A mutation drill** (for eval milestones): name the threshold change *and the case it
+      flips*. Check by hand that a seed case crosses it; a drill that can't fail proves nothing.
 
 **Tests: choose one per project** (record it in `CLAUDE.md` § Plan):
 
