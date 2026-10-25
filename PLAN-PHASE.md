@@ -168,7 +168,35 @@ turned into a guess.
 - [ ] **Commands:** edit only `/verify`'s check list. Add a project command only for a
       prompt you'd otherwise retype (for example, explaining one decision from its audit
       trail).
-- [ ] **Process skills:** keep them as they are. They are generic on purpose.
+- [ ] **Process skills:** keep them as they are. They are generic on purpose. Choose how
+      they arrive (`new_project.py --kit`):
+  - **vendored**, copied into `.claude/`, which works offline, in headless runs and in
+    untrusted folders;
+  - **plugin**, `spec-driven-build@fde-project-kit`, enabled in `.claude/settings.json`,
+    so every project shares one maintained copy and its commands are namespaced
+    `/spec-driven-build:<name>`.
+
+## Step 8b. MCP servers and other plugins
+
+**Files:** `.mcp.json`, `CLAUDE.md` § MCP servers and plugins
+
+There are two different questions here, so keep them apart:
+
+- **Build time: what may Claude Code reach while it builds?** List each MCP server in
+  `.mcp.json` (start from `.mcp.example.json`). Pass secrets as `${VAR}`, never as
+  literals. In `CLAUDE.md`, give one row per server: what to use it for, and what it must
+  never be used for (e.g. GitHub: read issues and PRs; never push or merge). If you need
+  none, leave `.mcp.json` empty and say "none". Project servers ask for approval the
+  first time. `claude -p` runs load them without asking, so list only servers you trust
+  unattended. Block a server everywhere with `disabledMcpjsonServers`.
+- **Runtime: what tools does the system's own agent call?** They are part of the
+  architecture, not of Claude Code's setup. Put them behind the system's tool boundary
+  (pattern P10), with versioned contracts, scopes and audit, whether they are local
+  functions or MCP servers. Say in `ARCHITECTURE.md` whether runtime MCP is in scope.
+- [ ] **Other plugins:** list any team plugin the project relies on (e.g. a deploy or
+      review plugin) in `.claude/settings.json` (`enabledPlugins`, plus
+      `extraKnownMarketplaces` for a private marketplace), and say in `CLAUDE.md` what
+      each is for.
 
 ## Step 9. Seed and readiness
 

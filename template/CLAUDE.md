@@ -86,7 +86,21 @@ These follow the `karpathy-guidelines` skill, applied to this repo.
 | Behind on a milestone | `/catch-up NN` | — |
 | Use-case work | — | {{FILL: your use-case skills, e.g. add-rule, add-tool, add-golden-case}} |
 
-The procedures behind these are written out for people in `workflows/`. Third-party sources and licences are in `.claude/skills/THIRD_PARTY_NOTICES.md`.
+The procedures behind these are written out for people in `workflows/`. Third-party sources and licences are in `.claude/skills/THIRD_PARTY_NOTICES.md` (vendored) or the plugin's `THIRD_PARTY_NOTICES.md`.
+
+## MCP servers and plugins
+
+**Plugins:** {{FILL: either "the process skills and milestone commands are vendored in `.claude/`" or "install `spec-driven-build@fde-project-kit` (enabled in `.claude/settings.json`); its commands run as `/spec-driven-build:<name>`"}}.
+
+**MCP servers you may use while building** (listed in `.mcp.json`; each needs approval the first time):
+
+| Server | Use it for | Never use it for |
+|---|---|---|
+| {{FILL: e.g. github, or "none"}} | {{FILL: e.g. reading issues and PRs}} | {{FILL: e.g. pushing, merging, or anything outside this repo}} |
+
+{{FILL: one line on runtime tools: the tools the *system's* agent calls at runtime are not these servers. Say where they live (e.g. "behind the tool gateway in `src/<pkg>/tools/`") and whether runtime MCP is in or out of scope.}}
+
+Secrets for MCP servers come from environment variables (`${VAR}` in `.mcp.json`), never from the file itself.
 
 ## Style
 

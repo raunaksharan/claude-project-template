@@ -9,6 +9,7 @@ Fails (exit 1) while any {{FILL…}} marker is left or a required part is missin
 - at least one ADR, and a failure-modes table with F1;
 - a milestone map, and per milestone a SPEC.md (Public API, Behaviour, Acceptance
   criteria with AC ids) and a PROMPTS.md with XML-tagged prompts;
+- .mcp.json parses, and the process skills are vendored or the plugin is enabled;
 - .claude/commands/verify.md lists real checks.
 """
 
@@ -20,7 +21,7 @@ from pathlib import Path
 
 CLAUDE_SECTIONS = ["## Context", "## Scope", "## Plan", "## Commands", "## Rules",
                    "## How to work", "## Don't touch", "## Code map", "## Skills and commands",
-                   "## Clarifications", "## Learnings from PRs"]
+                   "## MCP servers and plugins", "## Clarifications", "## Learnings from PRs"]
 SKIP_DIRS = {".git", ".venv", "__pycache__", "node_modules", ".pytest_cache", ".ruff_cache"}
 
 
@@ -101,7 +102,19 @@ def main() -> int:
     need(mr.exists() and re.search(r"^\| 0?1 \|", mr.read_text(), re.M) is not None,
          "milestones/README.md: no milestone map")
 
-    # 6. verify command
+    # 6. MCP config parses; the process skills are present, vendored or as the plugin
+    import json as _json
+    mcp = root / ".mcp.json"
+    try:
+        need("mcpServers" in _json.loads(mcp.read_text()), ".mcp.json: no mcpServers key")
+    except (OSError, ValueError):
+        problems.append(".mcp.json: missing or not valid JSON")
+    settings = root / ".claude/settings.json"
+    stext = settings.read_text() if settings.exists() else ""
+    need((root / ".claude/skills/tdd-module/SKILL.md").exists() or "spec-driven-build@" in stext,
+         "process skills: neither vendored in .claude/skills nor the plugin enabled")
+
+    # 7. verify command
     v = root / ".claude/commands/verify.md"
     need(v.exists() and re.search(r"^\s*1\. \S", v.read_text(), re.M) is not None,
          ".claude/commands/verify.md: no checks listed")

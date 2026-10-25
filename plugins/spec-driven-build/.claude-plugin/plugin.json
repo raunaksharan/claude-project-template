@@ -1,0 +1,13 @@
+{
+  "name": "spec-driven-build",
+  "displayName": "Spec-driven build",
+  "version": "0.1.0",
+  "description": "Process skills and commands for building a system milestone by milestone from plan-phase files: clarify, plan, tests first, build, debug, verify, review and learn.",
+  "author": {
+    "name": "Raunak Sharan",
+    "email": "raunak.bitsgoa@gmail.com"
+  },
+  "repository": "https://github.com/raunaksharan/claude-project-template",
+  "license": "MIT",
+  "keywords": ["spec-driven", "tdd", "planning", "review", "agentic"]
+}

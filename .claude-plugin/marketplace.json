@@ -1,0 +1,15 @@
+{
+  "name": "fde-project-kit",
+  "description": "Plugins for spec-driven projects built with Claude Code.",
+  "owner": {
+    "name": "Raunak Sharan",
+    "email": "raunak.bitsgoa@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "spec-driven-build",
+      "source": "./plugins/spec-driven-build",
+      "description": "Process skills (karpathy-guidelines, plus six adapted from obra/superpowers) and the milestone commands."
+    }
+  ]
+}

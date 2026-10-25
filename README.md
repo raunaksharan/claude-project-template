@@ -32,6 +32,13 @@ python3 scripts/new_project.py --name adas-copilot --package adas_copilot \
 python3 scripts/check_ready.py ../adas-copilot     # lists every {{FILL: …}} still open
 ```
 
+To use the process skills as a shared plugin instead of copies, add `--kit plugin`, or
+install it by hand in any project:
+
+```text
+/plugin install spec-driven-build --marketplace raunaksharan/claude-project-template
+```
+
 `new_project.py` copies `template/` and fills in the project name, the package and the
 CLI name. Everything else is a `{{FILL: what to write}}` marker for the architect.
 `check_ready.py` fails until none are left and the required sections exist. That is the
@@ -47,8 +54,10 @@ definition of ready for handing the project to Claude.
 | `template/architecture/` | Requirements, failure modes, ADR template | **Yes** |
 | `template/CLAUDE.md` | Context, Scope, Plan, Commands, Rules, How to work, Don't touch, Code map, Skills, Clarifications, Learnings | **Yes**, all except How to work |
 | `template/milestones/` | The milestone map, plus `SPEC.md` and an XML-tagged `PROMPTS.md` per milestone | **Yes** |
-| `template/.claude/skills/` | Process skills: `karpathy-guidelines` (vendored) and six adapted from obra/superpowers. Plus `_use-case-skill-template` | Process skills: no. Use-case skills: write your own |
-| `template/.claude/commands/` | `/start-milestone`, `/plan-milestone`, `/clarify`, `/write-tests`, `/build-module`, `/verify`, `/review`, `/learn`, `/catch-up` | Only `/verify`'s check list |
+| [`plugins/spec-driven-build/`](plugins/spec-driven-build/README.md) | **A Claude Code plugin** with the process skills (`karpathy-guidelines`, plus six adapted from obra/superpowers) and the milestone commands (`/start-milestone`, `/plan-milestone`, `/clarify`, `/write-tests`, `/build-module`, `/review`, `/learn`, `/catch-up`). `new_project.py --kit vendored` copies them in; `--kit plugin` enables the plugin instead | No |
+| [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) | Makes this repo a plugin marketplace, `fde-project-kit` | No |
+| `template/.claude/` | `settings.json`, the lint hook, `commands/verify.md` (the project's check list), `skills/_use-case-skill-template` | `verify.md`, plus your use-case skills |
+| `template/.mcp.json`, `.mcp.example.json` | The MCP servers Claude Code may use while building (empty by default) | **Yes**, decided in the plan phase (step 8b) |
 | `template/workflows/` | The same procedures written for people | Rarely |
 | `template/kit/` | Optional. Generates each milestone's Public API section from code, makes starter branches, and proves the step order | Config only (`kit/milestones.json`) |
 | [examples/credit-underwriter.md](examples/credit-underwriter.md) | Every template file mapped to its filled version in the worked example | No |
@@ -72,4 +81,4 @@ definition of ready for handing the project to Claude.
 The kit is the author's own. `karpathy-guidelines` is MIT
 (forrestchang/andrej-karpathy-skills). The six process skills are adapted from
 obra/superpowers (MIT, © 2025 Jesse Vincent). See
-`template/.claude/skills/THIRD_PARTY_NOTICES.md`.
+`plugins/spec-driven-build/THIRD_PARTY_NOTICES.md`.

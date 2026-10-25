@@ -1,21 +1,30 @@
 """Start a new project from template/.
 
     python3 scripts/new_project.py --name adas-agent-factory --package adas_factory \
-            --cli adas --dest ../adas-agent-factory
+            --cli adas --dest ../adas-agent-factory [--kit vendored|plugin]
 
 Copies template/ into --dest, renames __PACKAGE__ paths, and fills {{PROJECT}},
 {{PACKAGE}} and {{CLI}}. Every {{FILL: …}} is left for the architect; check_ready.py lists them.
+
+--kit vendored (default) copies the spec-driven-build plugin's skills and commands into
+the project's .claude/, so it works offline, in headless runs and in untrusted folders.
+--kit plugin instead registers the fde-project-kit marketplace and enables the plugin in
+.claude/settings.json, so every project shares one copy.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import shutil
 import subprocess
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parents[1]
 TEMPLATE = HERE / "template"
+PLUGIN = HERE / "plugins" / "spec-driven-build"
+MARKETPLACE = "fde-project-kit"
+MARKETPLACE_REPO = "raunaksharan/claude-project-template"
 
 
 def main() -> None:
@@ -24,6 +33,8 @@ def main() -> None:
     ap.add_argument("--package", required=True, help="Python package, e.g. adas_factory")
     ap.add_argument("--cli", required=True, help="CLI command, e.g. adas")
     ap.add_argument("--dest", required=True)
+    ap.add_argument("--kit", choices=["vendored", "plugin"], default="vendored",
+                    help="copy the process skills and commands in, or enable the plugin")
     ap.add_argument("--no-git", action="store_true", help="don't run git init")
     a = ap.parse_args()
 
@@ -47,6 +58,17 @@ def main() -> None:
             if new != text:
                 f.write_text(new)
     (dest / ".claude/hooks/lint.sh").chmod(0o755)
+    if a.kit == "vendored":
+        for sub in ("skills", "commands"):
+            shutil.copytree(PLUGIN / sub, dest / ".claude" / sub, dirs_exist_ok=True)
+        shutil.copy2(PLUGIN / "THIRD_PARTY_NOTICES.md", dest / ".claude/skills/THIRD_PARTY_NOTICES.md")
+    else:
+        settings_path = dest / ".claude/settings.json"
+        settings = json.loads(settings_path.read_text())
+        settings["extraKnownMarketplaces"] = {
+            MARKETPLACE: {"source": {"source": "github", "repo": MARKETPLACE_REPO}}}
+        settings["enabledPlugins"] = {f"spec-driven-build@{MARKETPLACE}": True}
+        settings_path.write_text(json.dumps(settings, indent=2) + "\n")
     if not a.no_git:
         subprocess.run(["git", "init", "-q", "-b", "main"], cwd=dest, check=True)
     print(f"created {dest}")
