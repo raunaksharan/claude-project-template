@@ -43,4 +43,4 @@ Imported elsewhere (keep these names exactly): {{FILL}}. Builds on: {{FILL}}.
 
 ## Changes to earlier modules
 
-{{FILL: or "None."}}
+{{FILL: or "None." For each change, name any earlier SPEC rule or acceptance criterion it alters (e.g. "milestone 03 said the runner reads the clock only at start; it now also reads it at each checkpoint"), so earlier tests are updated on purpose, not broken by surprise.}}

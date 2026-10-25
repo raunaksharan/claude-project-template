@@ -30,7 +30,7 @@ Check that every AC in SPEC.md has a test, and both sides of each threshold. App
 
 ## 3. Scaffold the interfaces (5 min)
 
-Test files import names from several modules at the top. Until every name exists, each file errors at import. The scaffold makes each test fail on its own:
+In Mode B the new tests fail at import until the names exist; in Mode A the given tests do. Either way, the scaffold makes each test fail on its own, so the per-step test commands below can run. Skip it when each step builds one whole module:
 
 ```text
 <task>Scaffold the public API of milestone {{FILL: NN}}'s modules</task>

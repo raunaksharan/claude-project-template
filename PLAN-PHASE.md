@@ -130,7 +130,9 @@ turned into a guess.
 - [ ] **Acceptance criteria,** numbered `AC-NN.k`, in Given / When / Then form, with
       concrete values. One for each side of every threshold. Every AC becomes at least
       one test.
-- [ ] **Changes to earlier modules,** or "None".
+- [ ] **Changes to earlier modules,** or "None". When a change alters a rule an earlier SPEC
+      stated (and its tests enforce), say so and name the rule. Our pilot's one
+      cross-milestone break came from a silent change of this kind.
 - [ ] **The acceptance command:** what must be green to call the milestone done.
 
 **Tests: choose one per project** (record it in `CLAUDE.md` § Plan):
