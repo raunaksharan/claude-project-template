@@ -1,0 +1,12 @@
+{
+  "_about": "Optional kit config. For each milestone: the reference commit or tag (base), its folder under milestones/ (dir), and the modules Claude builds in it (build). Everything else at base is the seed. make_kit.py and check_steps.py read this.",
+  "_config": {
+    "package": "{{PACKAGE}}",
+    "milestones_dir": "milestones",
+    "branch_prefix": "milestone",
+    "copy_from_main": [".claude", "CLAUDE.md", "ARCHITECTURE.md", "architecture", "workflows", "docs/plans", "kit"],
+    "allowed_collection_errors": {}
+  },
+  "01": {"base": "milestone-01", "dir": "01-example", "title": "{{FILL: title}}",
+         "build": ["src/{{PACKAGE}}/{{FILL: module}}.py"]}
+}

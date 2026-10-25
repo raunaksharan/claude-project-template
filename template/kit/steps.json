@@ -1,0 +1,9 @@
+{
+  "_about": "The build steps of each milestone's PROMPTS.md, for check_steps.py. Each step restores reference code (whole files, minus any 'still_stubbed' names as 'path::Qual.name') on top of a scaffold where every built function raises NotImplementedError, then runs the step's tests, which must all pass, then any commands, whose last output line must contain 'expect'.",
+  "01": [
+    {"step": "{{FILL: first module}}", "restore": ["src/{{PACKAGE}}/{{FILL}}.py"],
+     "tests": ["tests/test_{{FILL}}.py"], "k": null},
+    {"step": "{{FILL: last module}}", "restore": ["src/{{PACKAGE}}/{{FILL}}.py"],
+     "tests": ["tests"], "commands": [{"cmd": "uv run {{CLI}} run-all", "expect": "{{FILL: e.g. 8/8}}"}]}
+  ]
+}
