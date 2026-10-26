@@ -90,9 +90,10 @@ definition of ready for handing the project to Claude.
 - **The files improve over time.** Every review finding becomes a line in `CLAUDE.md`,
   so the next session doesn't repeat it.
 
-## Licences
+## License
 
-The kit is the author's own. `karpathy-guidelines` is MIT
-(forrestchang/andrej-karpathy-skills). The six process skills are adapted from
-obra/superpowers (MIT, © 2025 Jesse Vincent). See
-`plugins/spec-driven-build/THIRD_PARTY_NOTICES.md`.
+This repository is released under the [MIT License](LICENSE).
+
+`karpathy-guidelines` is MIT (forrestchang/andrej-karpathy-skills). The six process skills
+are adapted from obra/superpowers (MIT, © 2025 Jesse Vincent). See
+[`plugins/spec-driven-build/THIRD_PARTY_NOTICES.md`](plugins/spec-driven-build/THIRD_PARTY_NOTICES.md).
